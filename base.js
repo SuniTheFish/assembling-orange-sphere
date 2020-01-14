@@ -3,8 +3,9 @@ const THREE = require('three');
 window.THREE = THREE;
 require('three/examples/js/controls/OrbitControls');
 
-function createAnimation() {
-  const canvas = document.querySelector('#sphere');
+/** @param {string} id the id of the canvas */
+function createAnimation(id) {
+  const canvas = document.querySelector(`#${id}`);
 
   const renderer = new THREE.WebGLRenderer({ canvas });
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
@@ -50,6 +51,7 @@ function createAnimation() {
   scene.add(splitGeo);
 
   let changeDist = 0;
+  /** @param {number} distance */
   function expando(distance) {
     changeDist += distance;
     splitGeo.children.forEach((tri, i) => {
@@ -80,4 +82,4 @@ function createAnimation() {
   requestAnimationFrame(animate);
 }
 
-createAnimation();
+module.exports.createAnimation = createAnimation;

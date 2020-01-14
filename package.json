@@ -1,7 +1,7 @@
 {
   "name": "assembling-orange-sphere",
   "version": "1.0.0",
-  "description": "an THREE.js self assembling orange sphere",
+  "description": "a THREE.js self assembling orange sphere",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
