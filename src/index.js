@@ -9,34 +9,38 @@ const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.setZ(2);
+camera.position.setZ(4);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enablePan = false;
 controls.enableDamping = true;
+controls.autoRotate = true;
 
 const scene = new THREE.Scene();
 
 const icoMaterial = new THREE.MeshBasicMaterial({
-  color: 0x00ff00,
+  color: 0xff6b1c,
   polygonOffset: true,
   polygonOffsetFactor: 1,
   polygonOffsetUnits: 1,
 });
-const geometryBeforeSplitting = new THREE.IcosahedronGeometry(1, 1);
+const geometryBeforeSplitting = new THREE.IcosahedronGeometry(1, 2);
 const geoBSVerts = geometryBeforeSplitting.vertices;
 const geoBSFaces = geometryBeforeSplitting.faces;
 const splitGeo = new THREE.Group();
+/** @type {THREE.Geometry[]} */
+const splitFragments = [];
 geoBSFaces.forEach((face) => {
-  const splitGeoSegment = new THREE.Geometry();
-  splitGeoSegment.vertices.push(geoBSVerts[face.a], geoBSVerts[face.b], geoBSVerts[face.c]);
+  const splitGeoFragment = new THREE.Geometry();
+  splitGeoFragment.vertices.push(geoBSVerts[face.a], geoBSVerts[face.b], geoBSVerts[face.c]);
   const newFace = face;
   newFace.a = 0;
   newFace.b = 1;
   newFace.c = 2;
-  splitGeoSegment.faces.push(newFace);
-  const mesh = new THREE.Mesh(splitGeoSegment, icoMaterial);
-  const wireGeometry = new THREE.EdgesGeometry(geometryBeforeSplitting);
+  splitGeoFragment.faces.push(newFace);
+  splitFragments.push(splitGeoFragment);
+  const mesh = new THREE.Mesh(splitGeoFragment, icoMaterial);
+  const wireGeometry = new THREE.EdgesGeometry(splitGeoFragment);
   const wireMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
   const wireframe = new THREE.LineSegments(wireGeometry, wireMaterial);
   mesh.add(wireframe);
@@ -44,10 +48,32 @@ geoBSFaces.forEach((face) => {
 });
 scene.add(splitGeo);
 
-function animate() {
+let changeDist = 0;
+function expando(distance) {
+  changeDist += distance;
+  splitGeo.children.forEach((tri, i) => {
+    tri.translateOnAxis(splitFragments[i].faces[0].normal, distance);
+  });
+}
+
+expando(4);
+
+// set animation parameters
+const speed = -1;
+
+let lastTime = 0;
+function animate(time) {
+  const timeS = time / 1000;
+  const dt = timeS - lastTime;
+  lastTime = timeS;
   requestAnimationFrame(animate);
   controls.update();
+  if (changeDist > 0) {
+    expando(speed * dt);
+  } else {
+    expando(-changeDist);
+  }
   renderer.render(scene, camera);
 }
 
-animate();
+requestAnimationFrame(animate);
