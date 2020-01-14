@@ -1,12 +1,12 @@
-const path = require('path');
+// const path = require('path');
 
 module.exports = {
   entry: {
-    index: './src/index.js',
+    index: './base.js',
   },
   output: {
-    filename: 'src/[name].js',
-    path: path.join(__dirname, 'dist'),
+    filename: 'index.js',
+    path: __dirname,
   },
   module: {
     rules: [
@@ -17,15 +17,9 @@ module.exports = {
       },
     ],
   },
-  // optimization: {
-  //   splitChunks: {
-  //     // include all types of chunks
-  //     chunks: 'all',
-  //   },
+  // devServer: {
+  //   contentBase: path.join(__dirname, 'dist'),
+  //   compress: true,
+  //   watchContentBase: true,
   // },
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    watchContentBase: true,
-  },
 };
