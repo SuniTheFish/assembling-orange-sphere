@@ -17,7 +17,7 @@ controls.enableDamping = true;
 
 const scene = new THREE.Scene();
 
-const material = new THREE.MeshBasicMaterial({
+const icoMaterial = new THREE.MeshBasicMaterial({
   color: 0x00ff00,
   polygonOffset: true,
   polygonOffsetFactor: 1,
@@ -26,21 +26,23 @@ const material = new THREE.MeshBasicMaterial({
 const geometryBeforeSplitting = new THREE.IcosahedronGeometry(1, 1);
 const geoBSVerts = geometryBeforeSplitting.vertices;
 const geoBSFaces = geometryBeforeSplitting.faces;
+const splitGeo = new THREE.Group();
 geoBSFaces.forEach((face) => {
-  const splitGeo = new THREE.Geometry();
-  splitGeo.vertices.push(geoBSVerts[face.a], geoBSVerts[face.b], geoBSVerts[face.c]);
+  const splitGeoSegment = new THREE.Geometry();
+  splitGeoSegment.vertices.push(geoBSVerts[face.a], geoBSVerts[face.b], geoBSVerts[face.c]);
   const newFace = face;
   newFace.a = 0;
   newFace.b = 1;
   newFace.c = 2;
-  splitGeo.faces.push(newFace);
-  const mesh = new THREE.Mesh(splitGeo, material);
+  splitGeoSegment.faces.push(newFace);
+  const mesh = new THREE.Mesh(splitGeoSegment, icoMaterial);
   const wireGeometry = new THREE.EdgesGeometry(geometryBeforeSplitting);
   const wireMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
   const wireframe = new THREE.LineSegments(wireGeometry, wireMaterial);
   mesh.add(wireframe);
-  scene.add(mesh);
+  splitGeo.add(mesh);
 });
+scene.add(splitGeo);
 
 function animate() {
   requestAnimationFrame(animate);
