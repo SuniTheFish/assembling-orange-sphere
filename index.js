@@ -3,6 +3,21 @@ const THREE = require('three');
 window.THREE = THREE;
 require('three/examples/js/controls/OrbitControls');
 
+/**
+ * resize a renderer to the size of the css display
+ * @param {THREE.Renderer} renderer the renderer to resize
+ */
+function resizeToDisplaySize(renderer) {
+  const canvas = renderer.domElement;
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  const needResize = canvas.width !== width || canvas.height !== height;
+  if (needResize) {
+    renderer.setSize(width, height, false);
+  }
+  return needResize;
+}
+
 /** @param {string} id the id of the canvas */
 function createAnimation(id) {
   const canvas = document.querySelector(`#${id}`);
@@ -71,6 +86,10 @@ function createAnimation(id) {
     lastTime = timeS;
     requestAnimationFrame(animate);
     controls.update();
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+    resizeToDisplaySize(renderer);
+
     if (changeDist > 0) {
       expando(speed * dt);
     } else {
