@@ -20,16 +20,12 @@
   },
   "homepage": "https://github.com/SuniTheFish/assembling-orange-sphere#readme",
   "devDependencies": {
+    "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
-    "babel-loader": "^8.0.6",
     "core-js": "^3.6.4",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1"
+    "eslint-config-airbnb-base": "^14.0.0"
   },
   "dependencies": {
     "three": "^0.112.1"
