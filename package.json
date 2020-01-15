@@ -1,6 +1,6 @@
 {
   "name": "assembling-orange-sphere",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "a THREE.js self assembling orange sphere",
   "main": "index.js",
   "scripts": {

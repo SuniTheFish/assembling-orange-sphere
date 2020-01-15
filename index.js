@@ -19,11 +19,9 @@ function resizeToDisplaySize(renderer) {
 }
 
 /** @param {string} id the id of the canvas */
-function createAnimation(id) {
-  const canvas = document.querySelector(`#${id}`);
-
+function createAnimation(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas });
-  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.setZ(4);
@@ -40,6 +38,7 @@ function createAnimation(id) {
     polygonOffset: true,
     polygonOffsetFactor: 1,
     polygonOffsetUnits: 1,
+    side: THREE.DoubleSide,
   });
   const geometryBeforeSplitting = new THREE.IcosahedronGeometry(1, 2);
   const geoBSVerts = geometryBeforeSplitting.vertices;
@@ -65,6 +64,14 @@ function createAnimation(id) {
   });
   scene.add(splitGeo);
 
+  // randomize face heights
+  splitGeo.children.forEach((tri, i) => {
+    tri.translateOnAxis(
+      splitFragments[i].faces[0].normal,
+      (Math.random() - 0.5) * 0.1,
+    );
+  });
+
   let changeDist = 0;
   /** @param {number} distance */
   function expando(distance) {
@@ -78,7 +85,12 @@ function createAnimation(id) {
 
   // set animation parameters
   const speed = -1;
+  const jumpSpeed = 0.001;
+  const jumpInital = 0.05;
 
+  /** @type {Number[]} */
+  let animationTris = [];
+  let animationStage = jumpInital;
   let lastTime = 0;
   function animate(time) {
     const timeS = time / 1000;
@@ -92,8 +104,32 @@ function createAnimation(id) {
 
     if (changeDist > 0) {
       expando(speed * dt);
-    } else {
+    } else if (changeDist < 0) {
       expando(-changeDist);
+    } else if (Math.abs(animationStage) <= jumpInital) {
+      animationTris.forEach((triI) => {
+        splitGeo.children[triI].translateOnAxis(
+          splitFragments[triI].faces[0].normal,
+          animationStage,
+        );
+      });
+      animationStage -= jumpSpeed;
+    } else {
+      animationTris.forEach((triI) => {
+        const curGeo = splitGeo.children[triI];
+        curGeo.position.x = 0;
+        curGeo.position.y = 0;
+        curGeo.position.z = 0;
+        splitGeo.children[triI].translateOnAxis(
+          splitFragments[triI].faces[0].normal,
+          (Math.random() - 0.5) * 0.1,
+        );
+      });
+      animationTris = [];
+      for (let i = 0; i < 30; i += 1) {
+        animationTris.push(Math.floor(Math.random() * splitGeo.children.length));
+      }
+      animationStage = jumpInital;
     }
     renderer.render(scene, camera);
   }
