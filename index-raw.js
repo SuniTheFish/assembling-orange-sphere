@@ -20,7 +20,7 @@ function resizeToDisplaySize(renderer) {
 
 /** @param {string} id the id of the canvas */
 function createAnimation(canvas) {
-  const renderer = new THREE.WebGLRenderer({ canvas });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
