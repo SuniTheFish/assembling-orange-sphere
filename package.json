@@ -1,6 +1,6 @@
 {
   "name": "assembling-orange-sphere",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "a THREE.js self assembling orange sphere",
   "main": "index.js",
   "scripts": {
@@ -20,12 +20,12 @@
   },
   "homepage": "https://github.com/SuniTheFish/assembling-orange-sphere#readme",
   "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "core-js": "^3.6.4",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "core-js": "^3.6.5",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0"
+    "eslint-config-airbnb-base": "^14.1.0"
   },
   "dependencies": {
     "three": "^0.112.1"
