@@ -28,6 +28,6 @@
     "eslint-config-airbnb-base": "^14.1.0"
   },
   "dependencies": {
-    "three": "^0.112.1"
+    "three": "^0.125.0"
   }
 }
